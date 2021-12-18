@@ -8,16 +8,22 @@ const MainNav:FC = () =>{
     const [user,setUser] = useState<any>(null);
     
     const bootstrap = () => {
-        auth.onAuthStateChanged(_user=>{
+        auth.onAuthStateChanged(_user => {
             if(_user){
-                setUser(_user);
+                setUser(_user)
             }
         })
     }
 
-    useEffect(()=>{
-           bootstrap(); 
-    },[])
+    
+    useEffect(() => {
+        bootstrap()
+     }, [])
+
+    useEffect(
+        () => auth.onAuthStateChanged(_user => setUser(_user)), 
+    [])
+
 
     return (
         <NavigationContainer>

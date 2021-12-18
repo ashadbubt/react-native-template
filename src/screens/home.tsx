@@ -7,7 +7,7 @@ const Home:React.FC = (props) =>{
     const signOut = async ()=>{         
         await auth.signOut();
         // props.navigation.navigate("signUp");
-        props.navigation.navigate("dashboard")
+        // props.navigation.navigate("dashboard")
 
     }
    return  (
