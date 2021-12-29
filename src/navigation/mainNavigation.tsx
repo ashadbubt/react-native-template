@@ -7,23 +7,26 @@ import { db ,auth} from '../constants/firebase'
 const MainNav:FC = () =>{
     const [user,setUser] = useState<any>(null);
     
-    const bootstrap = () => {
-        auth.onAuthStateChanged(_user => {
-            if(_user){
-                setUser(_user)
-            }
-        })
-    }
+    // const bootstrap = () => {
+        
+    //     auth.onAuthStateChanged(_user => {
+    //         if(_user){
+    //             setUser(_user)
+    //         }
+    //     })
+    // }
 
     
-    useEffect(() => {
-        bootstrap()
-     }, [])
+    // useEffect(() => {
+    //     bootstrap()
+    //  }, [])
 
     useEffect(
         () => auth.onAuthStateChanged(_user => setUser(_user)), 
+    //    ()=> console.log("Come To MainNavigator"),
     [])
-
+    console.log("Come To MainNavigator")
+    
 
     return (
         <NavigationContainer>
