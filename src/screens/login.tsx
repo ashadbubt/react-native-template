@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Alert } from "react-native";
-
 import { TextInput, Button } from "react-native-paper";
 // import { auth } from "../constants/firebase";
 import { AuthContext } from "../components/context";

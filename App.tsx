@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState, useMemo } from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import AppStack from "./src/navigation/appstack";
+import TabNavigator from "./src/navigation/appstack";
 import AuthStack from "./src/navigation/authstack";
 import { View } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
@@ -88,8 +88,8 @@ const App: FC = () => {
   }
   return (
     <AuthContext.Provider value={authContext}>
-      <NavigationContainer>
-        {loginState.userToken !== null ? <AppStack /> : <AuthStack />}
+      <NavigationContainer>      
+        {loginState.userToken !== null ? <TabNavigator /> : <AuthStack />}
       </NavigationContainer>
     </AuthContext.Provider>
   );
