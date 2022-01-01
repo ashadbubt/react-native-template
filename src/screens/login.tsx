@@ -1,57 +1,105 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Alert } from "react-native";
-import { TextInput, Button } from "react-native-paper";
+import { View, Text, StyleSheet, Image, Alert } from "react-native";
+import {
+  TextInput,
+  Button,
+  HelperText,
+  Title,
+  Checkbox,
+} from "react-native-paper";
 // import { auth } from "../constants/firebase";
 import { AuthContext } from "../components/context";
+import axios from "axios";
+
+import { LOGIN_BASE_URL } from "../constants/constants";
+import * as Animatable from "react-native-animatable";
 
 const SignUp: React.FC = (props) => {
-  const [password, setPassword] = useState<string | null>(null);
-  const [email, setEmail] = useState<string | null>(null);
+  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [rememberMe, setRememberMe] = useState<boolean>(false);
+  const [isBackendValidationError, sedBackendValidationError] =
+    useState<boolean>(false);
   const { signIn } = React.useContext(AuthContext);
 
-  const loginHandle = (userName:String|null , password:String|null) => {
-      signIn(userName, password);
-  };
-  const login = async () => {
-    // if(email && password){
-    //     const {user} = await auth.signInWithEmailAndPassword(email, password);
-    // } else {
-    //     Alert.alert(`Missing Fields`);
-    // }
+  const loginHandle = async (userName: string, password: string) => {
+    const bodyFormData = new FormData();
+    bodyFormData.append("username", userName);
+    bodyFormData.append("password", password);
+    let response = await axios.post(
+      `${LOGIN_BASE_URL}/login/set_jwt_data`,
+      bodyFormData
+    );
+    if (response.status != 200) {
+      // Alert.alert("Unable to connect server");
+      sedBackendValidationError(true);
+    } else {
+      if (response.data.status != true) {
+        // Alert.alert(response.data.message);
+        sedBackendValidationError(true);
+      } else {
+        sedBackendValidationError(false);
+        signIn(response.data);
+      }
+    }
+    // signIn(userName, password);
   };
 
   return (
     <View style={style.container}>
-      <View style={{ alignItems: "center", alignContent: "center" }}>
-        <Text> Login Screen</Text>
+      <View style={style.header}>
+        <Image source={require("../../assets/logo.png")} />
       </View>
-
-      <View style={style.inputTest}>
-        <TextInput label="Email" onChangeText={(text) => setEmail(text)} />
+      <View style={style.headerTitle}>
+        <Title>Login to Your Account </Title>
       </View>
-      <View style={style.inputTest}>
+      <View style={style.footer}>
         <TextInput
-          label="Password"
-          onChangeText={(text) => setPassword(text)}
-          secureTextEntry
+          style={style.inputTest}
+          label="Email"
+          onChangeText={(text) => {
+            setEmail(text);
+            sedBackendValidationError(false);
+          }}
+          right={<TextInput.Icon name="email" color="black" />}
         />
-      </View>
-      <View
-        style={{
-          flexDirection: "row",
-          alignContent: "center",
-          justifyContent: "center",
-        }}
-      >
+
+        <TextInput
+          style={style.inputTest}
+          onChangeText={(text) => {
+            setPassword(text);
+            sedBackendValidationError(false);
+          }}
+          label="Password"
+          secureTextEntry
+          right={<TextInput.Icon name="eye" />}
+        />
+        <View style={style.forgetAndrememberVIew}>
+          <Checkbox
+            status={rememberMe ? "checked" : "unchecked"}
+            onPress={() => {
+              setRememberMe(!rememberMe);
+            }}
+            color="black"
+          />
+          <Text style={{ marginTop:5 }}>Forget Password</Text>
+        </View>
+
         <Button
-          style={{ marginRight: 5 }}
-          icon="login"
+          style={style.inputTest}
+          onPress={() => loginHandle(email, password)}
           mode="contained"
-          onPress={()=>{ loginHandle(email, password) } }
+          color="black"
         >
           Login
         </Button>
-        <Text> Forget Password</Text>
+        {isBackendValidationError ? (
+          <Animatable.View animation="fadeInLeft" duration={500}>
+            <HelperText style={style.inputTest} type="error">
+              Email and password is invalid!
+            </HelperText>
+          </Animatable.View>
+        ) : null}
       </View>
     </View>
   );
@@ -62,10 +110,30 @@ const style = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
   },
+  header: {
+    flex: 2,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  footer: {
+    flex: 3,
+
+    // backgroundColor:'black'
+  },
   inputTest: {
     marginLeft: 20,
     marginRight: 20,
     marginVertical: 5,
+  },
+  headerTitle: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  forgetAndrememberVIew: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginLeft: 20,
+    marginRight: 20,
   },
 });
 export default SignUp;

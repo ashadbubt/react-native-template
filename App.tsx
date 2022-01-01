@@ -5,8 +5,16 @@ import AuthStack from "./src/navigation/authstack";
 import { View } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import { AuthContext } from "./src/components/context";
-import  AsyncStorage  from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import SplashScreen from "./src/screens/SplashScreen";
 
+import axios from "axios";
+import { LOGIN_BASE_URL } from "./src/constants/constants";
+interface userLoginSuccesData {
+  key:string,
+  message:String,
+  status:boolean,
+}
 const App: FC = () => {
   // const [userToken, setUserToken] = useState<any>(null);
   // const [isLoading, setIsLoading] = useState<Boolean>(true);
@@ -14,8 +22,9 @@ const App: FC = () => {
     userName: null,
     isLoading: true,
     userToken: null,
+    errorMessage: "",
   };
-  const loginReducer = (prevState:any, action:any) => {
+  const loginReducer = (prevState: any, action: any) => {
     switch (action.type) {
       case "LOGIN":
         return {
@@ -23,6 +32,15 @@ const App: FC = () => {
           userToken: action.token,
           userName: "ashad",
           isLoading: false,
+          errorMessage:''
+        };
+      case "LOGIN_FAILED":
+        return {
+          ...prevState,
+          userToken: null,
+          userName: "ashad",
+          isLoading: false,
+          errorMessage:action.errorMessage
         };
       case "LOGOUT":
         return {
@@ -30,12 +48,14 @@ const App: FC = () => {
           userToken: null,
           userName: "ashad",
           isLoading: false,
+          errorMessage:''
         };
       case "RETRIVE_TOKEN":
         return {
           ...prevState,
           userToken: action.token,
           isLoading: false,
+          errorMessage:''
         };
     }
   };
@@ -47,21 +67,17 @@ const App: FC = () => {
 
   const authContext = useMemo(
     () => ({
-      signIn: async(userName:string|null, password:string|null) => {
-        try{
-          await AsyncStorage.setItem('userToken',"Token")
-        } catch (e){
-          console.log("ERROR");
-        }
-        dispatch({type:'LOGIN',token:"token" });
+      signIn: async (userLoginSuccesData:userLoginSuccesData) => {  
+        await AsyncStorage.setItem("userToken", userLoginSuccesData.key);     
+        dispatch({ type: "LOGIN", token: userLoginSuccesData.key });
       },
-      signOut: async() => {
-        try{
-           await AsyncStorage.removeItem('userToken')
-        } catch (e){
+      signOut: async () => {
+        try {
+          await AsyncStorage.removeItem("userToken");
+        } catch (e) {
           console.log("ERROR");
         }
-        dispatch({type:'LOGOUT' })
+        dispatch({ type: "LOGOUT" });
       },
     }),
     []
@@ -70,25 +86,21 @@ const App: FC = () => {
   useEffect(() => {
     setTimeout(async () => {
       let userToken = null;
-      try{
-        userToken = await AsyncStorage.getItem('userToken')
-      } catch (e){
+      try {
+        userToken = await AsyncStorage.getItem("userToken");
+      } catch (e) {
         console.log("ERROR");
       }
-      dispatch({type:'RETRIVE_TOKEN',token:userToken })
-    }, 1000);
+      dispatch({ type: "RETRIVE_TOKEN", token: userToken });
+    }, 2000);
   }, []);
 
   if (loginState.isLoading) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large"></ActivityIndicator>
-      </View>
-    );
+    return <SplashScreen></SplashScreen>;
   }
   return (
     <AuthContext.Provider value={authContext}>
-      <NavigationContainer>      
+      <NavigationContainer>
         {loginState.userToken !== null ? <TabNavigator /> : <AuthStack />}
       </NavigationContainer>
     </AuthContext.Provider>

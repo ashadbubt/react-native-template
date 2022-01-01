@@ -1,0 +1,1 @@
+export const LOGIN_BASE_URL = "https://login.jomakhata.com/";
