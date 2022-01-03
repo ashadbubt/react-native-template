@@ -1,11 +1,14 @@
 import SignUp from "./signup"; 
 import Login from "./login"; 
 import Home from "./home";
-import Dashboard from "./dashboard";
+import ForgetPassword from "./forgetPassword";
+import Settings from "./settings";
+import More from "./more"
 export {
     SignUp,
     Login,
     Home,
-    Dashboard
-
+    Settings,
+    ForgetPassword,
+    More
 }

@@ -13,15 +13,15 @@ const SignUp: React.FC = (props) => {
     
     if (name && email && password) {
      // console.log("Come");
-         try{
-          const user = await auth.createUserWithEmailAndPassword(email,password );
-          if(user){
-               db.collection('users').doc(user.uid).set({name, email, password})
-               // Alert.alert(JSON.stringify(user));
-          }
-         }catch(error){
-               console.log(error)
-          }     
+        //  try{
+        //   const user = await auth.createUserWithEmailAndPassword(email,password );
+        //   if(user){
+        //        db.collection('users').doc(user.uid).set({name, email, password})
+        //        // Alert.alert(JSON.stringify(user));
+        //   }
+        //  }catch(error){
+        //        console.log(error)
+        //   }     
     } else {
       Alert.alert(`Error`, `Missing Fields`);
     }

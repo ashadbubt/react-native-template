@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Image, Alert } from "react-native";
+import { View, Text, StyleSheet, Image, Alert, Touchable } from "react-native";
 import {
   TextInput,
   Button,
@@ -13,14 +13,25 @@ import axios from "axios";
 
 import { LOGIN_BASE_URL } from "../constants/constants";
 import * as Animatable from "react-native-animatable";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
-const SignUp: React.FC = (props) => {
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+
+import {AuthStackParamList} from  "../navigation/authstack";
+type Props = NativeStackScreenProps<AuthStackParamList,'login'>;
+
+const SignUp: React.FC<Props> = ({ navigation }: Props) => {
+  
+  
   const [password, setPassword] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [rememberMe, setRememberMe] = useState<boolean>(false);
   const [isBackendValidationError, sedBackendValidationError] =
     useState<boolean>(false);
-  const { signIn } = React.useContext(AuthContext);
+  const  [state, authContext] =  React.useContext(AuthContext);
+
+  
+  // const navigation = useNavigation();
 
   const loginHandle = async (userName: string, password: string) => {
     const bodyFormData = new FormData();
@@ -39,7 +50,7 @@ const SignUp: React.FC = (props) => {
         sedBackendValidationError(true);
       } else {
         sedBackendValidationError(false);
-        signIn(response.data);
+        authContext.signIn(response.data);
       }
     }
     // signIn(userName, password);
@@ -72,6 +83,8 @@ const SignUp: React.FC = (props) => {
           }}
           label="Password"
           secureTextEntry
+
+
           right={<TextInput.Icon name="eye" />}
         />
         <View style={style.forgetAndrememberVIew}>
@@ -82,7 +95,9 @@ const SignUp: React.FC = (props) => {
             }}
             color="black"
           />
-          <Text style={{ marginTop:5 }}>Forget Password</Text>
+          <TouchableOpacity onPress={()=>{  navigation.navigate('forgetPassword',{userId:"10"}) }}>
+              <Text style={{ marginTop:5 }}  >Forget Passwor</Text>
+          </TouchableOpacity>
         </View>
 
         <Button

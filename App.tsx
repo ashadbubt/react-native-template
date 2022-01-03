@@ -10,10 +10,11 @@ import SplashScreen from "./src/screens/SplashScreen";
 
 import axios from "axios";
 import { LOGIN_BASE_URL } from "./src/constants/constants";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 interface userLoginSuccesData {
-  key:string,
-  message:String,
-  status:boolean,
+  key: string;
+  message: String;
+  status: boolean;
 }
 const App: FC = () => {
   // const [userToken, setUserToken] = useState<any>(null);
@@ -32,7 +33,7 @@ const App: FC = () => {
           userToken: action.token,
           userName: "ashad",
           isLoading: false,
-          errorMessage:''
+          errorMessage: "",
         };
       case "LOGIN_FAILED":
         return {
@@ -40,7 +41,7 @@ const App: FC = () => {
           userToken: null,
           userName: "ashad",
           isLoading: false,
-          errorMessage:action.errorMessage
+          errorMessage: action.errorMessage,
         };
       case "LOGOUT":
         return {
@@ -48,14 +49,21 @@ const App: FC = () => {
           userToken: null,
           userName: "ashad",
           isLoading: false,
-          errorMessage:''
+          errorMessage: "",
         };
       case "RETRIVE_TOKEN":
         return {
           ...prevState,
           userToken: action.token,
           isLoading: false,
-          errorMessage:''
+          errorMessage: "",
+        };
+      case "SET_VALUE":
+        return {
+          ...prevState,
+          userToken: null,
+          isLoading: false,
+          errorMessage: "SET VALUE",
         };
     }
   };
@@ -67,8 +75,8 @@ const App: FC = () => {
 
   const authContext = useMemo(
     () => ({
-      signIn: async (userLoginSuccesData:userLoginSuccesData) => {  
-        await AsyncStorage.setItem("userToken", userLoginSuccesData.key);     
+      signIn: async (userLoginSuccesData: userLoginSuccesData) => {
+        await AsyncStorage.setItem("userToken", userLoginSuccesData.key);
         dispatch({ type: "LOGIN", token: userLoginSuccesData.key });
       },
       signOut: async () => {
@@ -78,7 +86,7 @@ const App: FC = () => {
           console.log("ERROR");
         }
         dispatch({ type: "LOGOUT" });
-      },
+      }
     }),
     []
   );
@@ -99,10 +107,12 @@ const App: FC = () => {
     return <SplashScreen></SplashScreen>;
   }
   return (
-    <AuthContext.Provider value={authContext}>
-      <NavigationContainer>
-        {loginState.userToken !== null ? <TabNavigator /> : <AuthStack />}
-      </NavigationContainer>
+    <AuthContext.Provider value={[loginState,authContext]}>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          {loginState.userToken !== null ? <TabNavigator /> : <AuthStack />}
+        </NavigationContainer>
+      </SafeAreaProvider>
     </AuthContext.Provider>
   );
 };

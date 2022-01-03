@@ -1,23 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import { AuthContext } from "../components/context";
 // import {db, auth} from "../constants/firebase"
 
 const Home: React.FC = (props) => {
-  // const signOut = async ()=>{
-  //     await auth.signOut();
-  //     // props.navigation.navigate("signUp");
-  //     // props.navigation.navigate("dashboard")
-
-  // }
-  const { signOut } = React.useContext(AuthContext);
+  const [state, authContext] = useContext(AuthContext)    
   return (
     <View style={style.container}>
       <Text>Home Screen</Text>
-      <Button icon="logout" onPress={signOut}>
-        LogOut
-      </Button>
+      
     </View>
   );
 };
