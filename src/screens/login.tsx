@@ -21,8 +21,7 @@ import {AuthStackParamList} from  "../navigation/authstack";
 type Props = NativeStackScreenProps<AuthStackParamList,'login'>;
 
 const SignUp: React.FC<Props> = ({ navigation }: Props) => {
-  
-  
+
   const [password, setPassword] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [rememberMe, setRememberMe] = useState<boolean>(false);
@@ -43,7 +42,7 @@ const SignUp: React.FC<Props> = ({ navigation }: Props) => {
     );
     if (response.status != 200) {
       // Alert.alert("Unable to connect server");
-      sedBackendValidationError(true);
+      sedBackendValidationError(true);      
     } else {
       if (response.data.status != true) {
         // Alert.alert(response.data.message);

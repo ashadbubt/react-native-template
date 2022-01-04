@@ -2,6 +2,9 @@ import React, { useState, FC, useEffect, useRef } from "react";
 import { StyleSheet, Text, Alert, View, TouchableOpacity , ImageBackground} from "react-native";
 import { Button, IconButton } from "react-native-paper";
 import { Camera } from "expo-camera";
+import { CameraPreview } from "../components";
+import * as Permissions from 'expo-permissions';
+import * as MediaLibrary from 'expo-media-library';
 
 const Settings: FC = () => {
   const [startCamera, setStartCamera] = useState<boolean>(false);
@@ -9,7 +12,6 @@ const Settings: FC = () => {
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [previewVisible, setPreviewVisible] = useState<boolean>(false);
   const [captureImage, setCapturedImage] = useState<any>(null);
-
   // const cam = useRef<Camera | null>();
   const ref = useRef<Camera>(null);
 
@@ -23,6 +25,26 @@ const Settings: FC = () => {
     }
   };
 
+  const __savePicture = async ()=>{
+    // const {status} = await  Permissions.askAsync(Permissions.MEDIA_LIBRARY);
+    
+    const { status }  = await  MediaLibrary.requestPermissionsAsync();
+    if(status === "granted"){
+        const assert = await MediaLibrary.createAssetAsync(captureImage.uri);
+        await MediaLibrary.createAlbumAsync('MaxApp',assert,false);
+        Alert.alert("Your image saved ");
+        setCapturedImage(null);
+        setPreviewVisible(false);
+        __startCamera();
+
+    } else {
+      console.log(status);
+      console.log("Oh you missed to give permission ");
+    }
+    
+    
+    
+  }
   const __takePicture = async () => {
     // if (!ref.camera) { console.log("camera not found"); return}
     const options = {
@@ -37,6 +59,12 @@ const Settings: FC = () => {
     setStartCamera(false);
     setCapturedImage(photo);
   };
+
+  const __retakePicture = () => {
+    setCapturedImage(null);
+    setPreviewVisible(false);
+    __startCamera();
+  }
 
   return (
     <View style={styles.container}>
@@ -71,23 +99,9 @@ const Settings: FC = () => {
       ) : (
         [
           previewVisible ? (
-            <View
-              style={{
-                backgroundColor: "transparent",
-                flex: 1,
-                width: "100%",
-                height: "100%",
-              }}
-            >
-              <ImageBackground
-                source={{ uri: captureImage && captureImage.uri }}
-                style={{
-                  flex: 1,
-                }}
-              />
-            </View>
+            <CameraPreview photo={captureImage} key={0} retackPicture={__retakePicture} savePicture={__savePicture}/>
           ) : (
-            <View style={styles.startCamera}>
+            <View style={styles.startCamera} key={1}>
               <Button
                 icon="camera-iris"
                 mode="outlined"
