@@ -15,7 +15,7 @@ interface Props {
 }
 
 const Input:React.FC<Props> = (props) =>{
-
+    // console.log("Child render")
    return  (
      <View>
            <TextInput        

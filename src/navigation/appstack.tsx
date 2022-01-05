@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Home, Settings, More, TestForm } from "../screens";
 import { Feather, AntDesign } from "@expo/vector-icons";
+import { TextInput, Button } from "react-native-paper";
 
 const Tab = createBottomTabNavigator();
 
@@ -32,9 +33,9 @@ const TabNavigator = () => {
         name="Dashboard"
         component={Settings}
         options={{
-          tabBarLabel: "settings",
+          tabBarLabel: "Camera",
           tabBarIcon: ({ focused, color }) => (
-            <Feather name="settings" size={24} color={color} />
+            <Feather name="camera" size={24} color={color} />
           ),
           unmountOnBlur: true,
         }}
@@ -43,7 +44,7 @@ const TabNavigator = () => {
         name="Test"
         component={TestForm}
         options={{
-          tabBarLabel: "Test",
+          tabBarLabel: "Form",
           tabBarIcon: ({ focused, color }) => (
             <Feather name="airplay" size={24} color={color} />
           ),
