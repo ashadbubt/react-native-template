@@ -1,10 +1,14 @@
 import React, { useState, FC, useEffect, useRef } from "react";
-import { StyleSheet, Text, Alert, View, TouchableOpacity , ImageBackground} from "react-native";
+import { StyleSheet, Text, Alert, View, TouchableOpacity , ImageBackground, Image} from "react-native";
 import { Button, IconButton } from "react-native-paper";
 import { Camera } from "expo-camera";
 import { CameraPreview } from "../components";
 import * as Permissions from 'expo-permissions';
 import * as MediaLibrary from 'expo-media-library';
+import * as ImagePicker from 'expo-image-picker';
+import axios from "axios";
+import { LOGIN_BASE_URL } from "../constants/constants";
+
 
 const Settings: FC = () => {
   const [startCamera, setStartCamera] = useState<boolean>(false);
@@ -12,6 +16,8 @@ const Settings: FC = () => {
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [previewVisible, setPreviewVisible] = useState<boolean>(false);
   const [captureImage, setCapturedImage] = useState<any>(null);
+  const [image, setImage] = useState<ImagePicker.ImageInfo |null> (null);
+
   // const cam = useRef<Camera | null>();
   const ref = useRef<Camera>(null);
 
@@ -25,6 +31,52 @@ const Settings: FC = () => {
     }
   };
 
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      setImage(result);
+    }
+  };
+
+  const uploadImage = async () =>{
+    // console.log(image);
+    if(image!== null){
+      let localUri = image.uri;
+  
+      let filename =  localUri?.split('/').pop();
+    
+      let match = /\.(\w+)$/.exec(filename!);
+      let type = match ? `image/${match[1]}` : `image`;
+    
+      let formData = new FormData();
+      formData.append('photo',JSON.parse(JSON.stringify({ uri: localUri, type: 'image/jpeg', name: 'testPhotoName' })));
+      // formData.append('photo', { uri: localUri, name: filename, type });
+
+      let response = await axios.post(
+        `${LOGIN_BASE_URL}/login/upload`,
+        formData,{
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      );
+      console.log(response);
+
+    //setImage(null);
+    } else {
+        console.log("File Not Found");
+    }
+  }
   const __savePicture = async ()=>{
     // const {status} = await  Permissions.askAsync(Permissions.MEDIA_LIBRARY);
     
@@ -111,6 +163,29 @@ const Settings: FC = () => {
               >
                 Camture Image
               </Button>
+
+              <Button
+                icon="camera-plus"
+                mode="outlined"
+                style={{ marginTop:20 }}
+                onPress={() => {
+                  pickImage();
+                }}
+              >
+                Pic Image
+              </Button>
+              {image && <Image source={{ uri: image.uri }} style={{ width: 200, height: 200 ,  marginTop:20 }} />}
+              <Button
+                icon="camera-plus"
+                mode="outlined"
+                style={{ marginTop:20 }}
+                onPress={() => {
+                  uploadImage();
+                }}
+              >
+                Upload Image
+              </Button>
+
             </View>
           ),
         ]

@@ -39,6 +39,7 @@ const CameraPreview:FC <Props>=(Props)=>{
                         size={30}
                         onPress={() => Props.savePicture() }
                     />
+                      
                  </View>
                 
             </ImageBackground>
