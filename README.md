@@ -1,12 +1,12 @@
 # React native template include Login/Logout (TypeScript)
-```
-React native template include Login, Logout.
-Tab Nevigation , Stack Navigation
-One of basic  form which include multipal input and  data  transfer form parent component to chaild component 
-Example of multipal Hook ,useState, useEffect, useMemo, Memo, useCallBack .
-Image capture through camera and save those image save to phone.
-Upload image to server  .
-```
+
+* React native template include Login, Logout.
+* Tab Nevigation , Stack Navigation
+* One of basic  form which include multipal input and  data  transfer form parent component to chaild component 
+* Example of multipal Hook ,useState, useEffect, useMemo, Memo, useCallBack .
+* Image capture through camera and save those image save to phone.
+* Upload image to server  .
+
 ** Use context for global state .
 
 
