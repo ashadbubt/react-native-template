@@ -7,7 +7,7 @@
 * Image capture through camera and save those image save to phone.
 * Upload image to server  .
 
-** Use context for global state .
+* Use context for global state test  .
 
 
 ## Installation
@@ -16,14 +16,16 @@ git remote add origin https://gitlab.com/ashadbubt/max-app.git
 git pull origin master
 yarn
 expo start
+
+or just download file 
 ```
 
 ## Usage
-Expo SDK 44.0.0
-react-native: 0.64.3
-react-navigation: 6.0.6
-typescript: ~4.3.5
-axios: ^0.24.0
+- Expo SDK 44.0.0
+- react-native: 0.64.3
+- react-navigation: 6.0.6
+- typescript: ~4.3.5
+- axios: ^0.24.0
 
 More of library all are latest 
 
