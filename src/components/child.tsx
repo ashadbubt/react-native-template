@@ -1,15 +1,22 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, forwardRef, useImperativeHandle } from "react";
 import { View, Text } from "react-native";
 import { Title } from "react-native-paper";
 interface Props {
     title:string,
     array:string[],
-    getData:( type:string )=>void
+    getData:( type:string )=>void,
+    ref: any
 }
-const Child:FC<Props> =(props)=>{
+const Child:FC<Props> = forwardRef((props, ref)=>{
 
 
-    console.log("Child Render");
+    useImperativeHandle(ref, () => ({
+
+        getAlert() {
+          alert("getAlert from Child");
+        }
+    
+      }));
 
     useEffect(()=>{
         props.getData("tasks")
@@ -19,5 +26,5 @@ const Child:FC<Props> =(props)=>{
             <Text style={{ fontSize:20}} > Child Compnent {props.title} </Text>
         </View>
     )
-}
+})
 export default React.memo(Child);

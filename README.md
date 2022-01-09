@@ -1,6 +1,6 @@
 # max-app
 
-
+React native template include Login, Logout and Basic Form 
 
 ## Getting started
 

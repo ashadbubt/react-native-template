@@ -1,4 +1,4 @@
-import React, { useContext, useState , useMemo, useEffect, useCallback} from "react";
+import React, { useContext, useState , useMemo, useEffect, useCallback, useRef} from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Button, Colors } from "react-native-paper";
 import { AuthContext } from "../components/context";
@@ -9,6 +9,8 @@ const Home: React.FC = (props) => {
   const [state, authContext] = useContext(AuthContext)    
   const [count, setCount] = useState(0)
   const [dark, setBackground] = useState(true)
+  const childRef = useRef();
+
   
   const doubleNumber = useMemo(()=>{
     slowFunction(count.toString());
@@ -25,6 +27,10 @@ const Home: React.FC = (props) => {
   useEffect(()=>{
     fetchData("users");
   },[fetchData])  
+
+  const callChildFunction = () =>{
+    console.log(childRef.current); 
+  }
 
   return (
     <View style={[style.container,dark? {backgroundColor:'gray'}:{backgroundColor:'white'}]}>
@@ -50,7 +56,16 @@ const Home: React.FC = (props) => {
           Change background
         </Button>
 
-        <Child title="Hello Child " array={array} getData={fetchData}/>
+        <Child title="Hello Child"  ref={childRef}   array={array} getData={fetchData}/>
+
+        <Button
+          style={style.inputTest}
+          icon=""
+          mode="contained"
+          onPress={() =>  { callChildFunction(); } }
+        >
+          Call Child Function
+        </Button>
     </View>
   );
 };

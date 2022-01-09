@@ -59,18 +59,29 @@ const Settings: FC = () => {
       let type = match ? `image/${match[1]}` : `image`;
     
       let formData = new FormData();
-      formData.append('photo',JSON.parse(JSON.stringify({ uri: localUri, type: 'image/jpeg', name: 'testPhotoName' })));
+      formData.append('photo',JSON.parse(JSON.stringify({ uri: localUri,  name:filename, type })));
       // formData.append('photo', { uri: localUri, name: filename, type });
 
       let response = await axios.post(
-        `${LOGIN_BASE_URL}/login/upload`,
+        `${LOGIN_BASE_URL}Login/uploadFile`,
         formData,{
           headers: {
             'Content-Type': 'multipart/form-data'
           }
         }
       );
-      console.log(response);
+
+      // console.log(response.data);
+      if( response.status == 200 ) {
+        if(response.data.status == true){
+          setImage(null);
+          console.log("File Upload successfull ");
+        } else {
+          console.log(response.data);
+        }
+      } else {
+        console.log("File Not Found");
+      }
 
     //setImage(null);
     } else {
