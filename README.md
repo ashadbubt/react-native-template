@@ -10,7 +10,16 @@
 * Use context for global state test  .
 
 
-## Installation
+## Installation 
+Before install template please check dose expo cli install in your pc or not install expo cli 
+```
+npm install --global expo-cli
+
+```
+You Need Yarn Also if not install in your pc install it 
+```
+npm install --global yarn
+
 ```
 git remote add origin https://gitlab.com/ashadbubt/max-app.git
 git pull origin master
