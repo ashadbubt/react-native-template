@@ -21,6 +21,7 @@ You Need Yarn Also if not install in your pc install it
 npm install --global yarn
 
 ```
+```
 git remote add origin https://gitlab.com/ashadbubt/max-app.git
 git pull origin master
 yarn
